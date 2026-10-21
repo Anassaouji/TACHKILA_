@@ -65,4 +65,19 @@ joueurMD.append(md);
 
 
 
+// modal fermeture et ouverture
+const btnAjout = document.querySelector(".btn-ajout");
+const modal = document.querySelector(".modal-ajout");
+const btnHidden = document.querySelector(".btn-hidden");
+const btnAnulle = document.querySelector(".btn-annule");
+btnAjout.addEventListener("click", ()=>{
+        modal.classList.remove("hidden");
+})
+
+btnHidden.addEventListener("click", ()=>{
+        modal.classList.add("hidden");
+})
+btnAnulle.addEventListener("click", ()=>{
+        modal.classList.add("hidden");
+})
 
