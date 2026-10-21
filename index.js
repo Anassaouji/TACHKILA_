@@ -66,6 +66,10 @@ joueurMD.append(md);
 
 
 // modal fermeture et ouverture
+const form = document.querySelector("#monForm");
+form.addEventListener("submit", function(event) {
+    event.preventDefault()})
+
 const btnAjout = document.querySelector(".btn-ajout");
 const modal = document.querySelector(".modal-ajout");
 const btnHidden = document.querySelector(".btn-hidden");
