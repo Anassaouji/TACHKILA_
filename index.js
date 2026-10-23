@@ -1,87 +1,252 @@
 
 
 const terrain = document.querySelector("#terrain");
-
-for(let i = 1 ; i <= 93; i++){
+const aside = document.querySelector("aside");
+for (let i = 1; i <= 93; i++) {
         let col = document.createElement("div");
         col.classList.add("col");
-        col.classList.add("col"+i);
-        terrain.appendChild(col);   
+        col.classList.add("col" + i);
+        terrain.appendChild(col);
 }
 
 const joueurDG = document.querySelector(".col16");
-const dg=document.createElement("p");
-dg.textContent="DG";
+const dg = document.createElement("p");
+dg.textContent = "DG";
 joueurDG.append(dg);
 
 
 const joueurMG = document.querySelector(".col20");
-const mg=document.createElement("p");
-mg.textContent="MG";
+const mg = document.createElement("p");
+mg.textContent = "MG";
 joueurMG.append(mg);
 
 
 const joueurBU1 = document.querySelector(".col35");
 const joueurBU2 = document.querySelector(".col83");
-const bu1=document.createElement("p");
-const bu2=document.createElement("p");
-bu1.textContent="BU";
-bu2.textContent="BU";
+const bu1 = document.createElement("p");
+const bu2 = document.createElement("p");
+bu1.textContent = "BU";
+bu2.textContent = "BU";
 joueurBU1.append(bu1);
 joueurBU2.append(bu2);
 
 const joueurGB = document.querySelector(".col37");
-const gb=document.createElement("p");
-gb.textContent="GB";
+const gb = document.createElement("p");
+gb.textContent = "GB";
 joueurGB.append(gb);
 
 const joueurDC1 = document.querySelector(".col39");
 const joueurDC2 = document.querySelector(".col63");
-const dc1=document.createElement("p");
-const dc2=document.createElement("p");
-dc1.textContent="DC";
-dc2.textContent="DC";
+const dc1 = document.createElement("p");
+const dc2 = document.createElement("p");
+dc1.textContent = "DC";
+dc2.textContent = "DC";
 joueurDC1.append(dc1);
 joueurDC2.append(dc2);
 
 const joueurMC1 = document.querySelector(".col43");
 const joueurMC2 = document.querySelector(".col67");
-const mc1=document.createElement("p");
-const mc2=document.createElement("p");
-mc1.textContent="MC";
-mc2.textContent="MC";
+const mc1 = document.createElement("p");
+const mc2 = document.createElement("p");
+mc1.textContent = "MC";
+mc2.textContent = "MC";
 joueurMC1.append(mc1);
 joueurMC2.append(mc2);
 
 const joueurDD = document.querySelector(".col88");
-const dd=document.createElement("p");
-dd.textContent="DD";
+const dd = document.createElement("p");
+dd.textContent = "DD";
 joueurDD.append(dd);
 
 const joueurMD = document.querySelector(".col92");
-const md=document.createElement("p");
-md.textContent="MD";
+const md = document.createElement("p");
+md.textContent = "MD";
 joueurMD.append(md);
 
-
-
-// modal fermeture et ouverture
-const form = document.querySelector("#monForm");
-form.addEventListener("submit", function(event) {
-    event.preventDefault()})
 
 const btnAjout = document.querySelector(".btn-ajout");
 const modal = document.querySelector(".modal-ajout");
 const btnHidden = document.querySelector(".btn-hidden");
 const btnAnulle = document.querySelector(".btn-annule");
-btnAjout.addEventListener("click", ()=>{
+
+btnAjout.addEventListener("click", () => {
         modal.classList.remove("hidden");
 })
-
-btnHidden.addEventListener("click", ()=>{
+btnHidden.addEventListener("click", () => {
         modal.classList.add("hidden");
 })
-btnAnulle.addEventListener("click", ()=>{
+btnAnulle.addEventListener("click", () => {
         modal.classList.add("hidden");
-})
+});
 
+
+
+const joueurs = [];
+
+const form = document.querySelector("#monForm");
+const divAremplace = document.querySelector(".remplace");
+
+
+
+// Function pour afficher les joueurs
+function afficherJoueurs() {
+
+        if (joueurs.length === 0) {
+                divAremplace.className =
+                        "remplace w-full rounded-[10px] border-2 border-dashed !mt-4 !p-5 text-center";
+
+                const message = document.createElement("p");
+                message.textContent = "Aucun joueur pour le moment.";
+
+                divAremplace.replaceChildren(message);
+                return;
+        }
+
+        divAremplace.className = "remplace vide";
+
+        const divContainer = document.createElement("div");
+        divContainer.classList.add("container-divs");
+
+        joueurs.forEach((ele, index) => {
+                const divParent = document.createElement("div");
+                divParent.classList.add("parent");
+                divParent.dataset.index = index;
+                const divChild1 = document.createElement("div");
+                divChild1.classList.add("child");
+
+                const child1 = document.createElement("div");
+                child1.classList.add("child1");
+                child1.textContent = ele.nombre;
+
+                const child2 = document.createElement("div");
+                child2.classList.add("child2");
+
+                const souChild1 = document.createElement("div");
+                souChild1.textContent = ele.name;
+
+                const souChild2 = document.createElement("div");
+                souChild2.textContent = ele.post;
+
+                child2.append(souChild1, souChild2);
+                divChild1.append(child1, child2);
+
+                const divChild2 = document.createElement("div");
+                divChild2.classList.add("child");
+
+                const child3 = document.createElement("div");
+                const btn1 = document.createElement("button");
+                btn1.classList.add("edit");
+                const imgUpdate = document.createElement("img");
+                imgUpdate.setAttribute("src", "./images/edit-2.svg");
+                imgUpdate.classList.add("inline");
+                btn1.append(imgUpdate);
+                child3.append(btn1);
+
+                const child4 = document.createElement("div");
+                const btn2 = document.createElement("button");
+                btn2.classList.add("delete");
+                const imgDelete = document.createElement("img");
+                imgDelete.setAttribute("src", "./images/trash-2.svg");
+                imgDelete.classList.add("inline");
+                btn2.append(imgDelete);
+                child4.append(btn2);
+
+                divChild2.append(child3, child4);
+
+                divParent.append(divChild1, divChild2);
+                divContainer.append(divParent);
+        });
+
+        // Afficher la liste complète
+        divAremplace.replaceChildren(divContainer);
+}
+
+// Ajouter un joueur
+form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const inputName = document.querySelector("input[type='text']");
+        const postChecked = document.querySelector("input[type='radio']:checked");
+        const numberInput = document.querySelector('input[type="number"]');
+
+        const errorName = document.querySelector(".error-name");
+        const errorNumber = document.querySelector(".error-number");
+
+
+
+        // Réinitialiser les messages d'erreur au début de la soumission
+        errorName.textContent = "";
+        errorNumber.textContent = "";
+
+        let name = "";
+        let post = "";
+        let number = "";
+
+        let isValid = true;
+
+        if (postChecked) {
+                post = postChecked.value;
+        }
+
+        const validName = /^[a-zA-Z]+$/;
+        const numbrValid = /^(?:[1-9][0-9]?)$/;
+
+        if (inputName.value.trim() === "") {
+                errorName.textContent = "Le champ nom ne peut pas être vide.";
+                isValid = false;
+        } else if (!validName.test(inputName.value.trim())) {
+                errorName.textContent = "Nom invalide (lettres uniquement, pas d'espaces).";
+                isValid = false;
+        } else {
+                name = inputName.value.trim();
+        }
+
+        // Validation du Numéro
+        if (numberInput.value.trim() === "") {
+                errorNumber.textContent = "Le champ numéro ne peut pas être vide.";
+                isValid = false;
+        } else if (!numbrValid.test(numberInput.value.trim())) {
+                errorNumber.textContent = "Le numéro doit être compris entre 1 et 99.";
+                isValid = false;
+        } else {
+                number = numberInput.value.trim();
+        }
+
+        if (!isValid) {
+                return;
+        }
+
+        const joueur = {
+                name: name,
+                post: post,
+                nombre: number
+        };
+
+        joueurs.push(joueur);
+
+        const nbrJoueurs = document.querySelector(".nombreJoueur");
+        nbrJoueurs.textContent = `${joueurs.length} joueur(s)`;
+
+        // Réafficher tous les joueurs
+        afficherJoueurs();
+
+        form.reset();
+});
+
+
+
+
+document.addEventListener("click", function (event) {
+        const button = event.target.closest(".delete");
+
+        if (button) {
+                const parent = button.closest(".parent");
+                const index = Number(parent.dataset.index);
+
+                joueurs.splice(index, 1);
+                const nbrJoueurs = document.querySelector(".nombreJoueur");
+                nbrJoueurs.textContent = `${joueurs.length} joueur(s)`;
+
+                afficherJoueurs();
+        }
+});
