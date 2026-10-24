@@ -82,6 +82,7 @@ btnAnulle.addEventListener("click", () => {
 
 
 const joueurs = [];
+let indexModification = null;
 
 const form = document.querySelector("#monForm");
 const divAremplace = document.querySelector(".remplace");
@@ -222,7 +223,12 @@ form.addEventListener("submit", function (event) {
                 nombre: number
         };
 
-        joueurs.push(joueur);
+        if (indexModification !== null) {
+                joueurs[indexModification] = joueur;
+                indexModification = null;
+        } else {
+                joueurs.push(joueur);
+        }
 
         const nbrJoueurs = document.querySelector(".nombreJoueur");
         nbrJoueurs.textContent = `${joueurs.length} joueur(s)`;
@@ -235,18 +241,56 @@ form.addEventListener("submit", function (event) {
 
 
 
-
+// supprimer un joueur
 document.addEventListener("click", function (event) {
         const button = event.target.closest(".delete");
 
         if (button) {
-                const parent = button.closest(".parent");
-                const index = Number(parent.dataset.index);
-
-                joueurs.splice(index, 1);
-                const nbrJoueurs = document.querySelector(".nombreJoueur");
-                nbrJoueurs.textContent = `${joueurs.length} joueur(s)`;
-
-                afficherJoueurs();
+                deletJoueur(button);
         }
 });
+
+
+function deletJoueur(btn) {
+        const parent = btn.closest(".parent");
+        const index = Number(parent.dataset.index);
+
+        joueurs.splice(index, 1);
+        const nbrJoueur = document.querySelector(".nombreJoueur");
+        nbrJoueur.textContent = `${joueurs.length} joueur(s)`;
+
+        afficherJoueurs();
+
+}
+
+
+document.addEventListener("click", function (event) {
+        const button = event.target.closest(".edit");
+
+        if (button) {
+                modifierJoueur(button);
+        }
+});
+
+function modifierJoueur(btn) {
+        const parent = btn.closest(".parent");
+        const index = Number(parent.dataset.index);
+
+        const joueur = joueurs[index];
+
+        indexModification = index;
+
+        const inputName = document.querySelector("input[type='text']");
+        const numberInput = document.querySelector('input[type="number"]');
+        const radios = document.querySelectorAll('input[type="radio"]');
+
+        inputName.value = joueur.name;
+        numberInput.value = joueur.nombre;
+
+        radios.forEach(radio => {
+                if(radio.value === joueur.post) 
+                        radio.checked = true;
+        });
+
+        modal.classList.remove("hidden");
+}
