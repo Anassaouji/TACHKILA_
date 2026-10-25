@@ -253,7 +253,7 @@ form.addEventListener("submit", function (event) {
                 post = postChecked.value;
         }
 
-        const validName = /^[a-zA-Z]+$/;
+        const validName = /^[a-zA-Z]{3,7}$/;
         const numbrValid = /^(?:[1-9][0-9]?)$/;
 
         if (inputName.value.trim() === "") {
@@ -496,10 +496,12 @@ document.addEventListener("change", (event) => {
 
 function creerDivJoueur(joueur, posteCode) {
         const divselected = document.createElement("div");
+        divselected.classList.add("flex","items-center","text-white");
         divselected.dataset.numero = joueur.nombre;
         divselected.dataset.indexJoueur = joueurs.indexOf(joueur);
 
         const divselectedChild1 = document.createElement("div");
+        divselectedChild1.classList.add("border-2","rounded-[50%]","!px-2","py-4","!mr-1")
         divselectedChild1.textContent = joueur.nombre;
 
         const divselectedChild2 = document.createElement("div");
