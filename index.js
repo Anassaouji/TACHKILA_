@@ -81,6 +81,8 @@ btnAnulle.addEventListener("click", () => {
 
 
 
+
+
 const joueurs = [];
 let indexModification = null;
 
@@ -108,8 +110,13 @@ function afficherJoueurs() {
         const divContainer = document.createElement("div");
         divContainer.classList.add("container-divs");
 
+
+
         joueurs.forEach((ele, index) => {
                 const divParent = document.createElement("div");
+                divParent.classList.add("border-1", "border-neutral-300", "!mt-[20px]", "rounded-[10px]", "!p-[15px]")
+                const divpere = document.createElement("div");
+                divpere.classList.add("flex", "justify-between")
                 divParent.classList.add("parent");
                 divParent.dataset.index = index;
                 const divChild1 = document.createElement("div");
@@ -154,7 +161,64 @@ function afficherJoueurs() {
 
                 divChild2.append(child3, child4);
 
-                divParent.append(divChild1, divChild2);
+                // select
+                const select = document.createElement("select");
+                select.classList.add("select", "w-full", "!mt-2", "bg-slate-800", "border", "rounded-[6px]", "!p-2");
+                select.name = "post-name";
+                // option
+                const option1 = document.createElement("option");
+                option1.textContent = "Sur le banc";
+                option1.classList.add("option");
+                option1.value = "sur-bank";
+                const option2 = document.createElement("option");
+                option2.classList.add("option");
+                option2.textContent = "GB - Gardien";
+                option2.value = "gardien";
+                const option3 = document.createElement("option");
+                option3.classList.add("option");
+                option3.textContent = "DG - Défenseur gauche";
+                option3.value = "defenseur";
+                const option4 = document.createElement("option");
+                option4.classList.add("option");
+                option4.textContent = "DC - Défenseur central 1";
+                option4.value = "defenseur";
+                const option5 = document.createElement("option");
+                option5.classList.add("option");
+                option5.textContent = "DC - Défenseur central 2";
+                option5.value = "defenseur";
+                const option6 = document.createElement("option");
+                option6.classList.add("option");
+                option6.textContent = "DD - Défenseur droit";
+                option6.value = "defenseur";
+                const option7 = document.createElement("option");
+                option7.classList.add("option");
+                option7.textContent = "MG - Milieu gauche";
+                option7.value = "milieu";
+                const option8 = document.createElement("option");
+                option8.classList.add("option");
+                option8.textContent = "MC - Milieu central 1";
+                option8.value = "milieu";
+                const option9 = document.createElement("option");
+                option9.classList.add("option");
+                option9.textContent = "MC - Milieu central 2";
+                option9.value = "milieu";
+                const option10 = document.createElement("option");
+                option10.classList.add("option");
+                option10.textContent = "MD - Milieu droit";
+                option10.value = "milieu";
+                const option11 = document.createElement("option");
+                option11.classList.add("option");
+                option11.textContent = "BU - Buteur 1";
+                option11.value = "buteur";
+                const option12 = document.createElement("option");
+                option12.classList.add("option");
+                option12.textContent = "BU - Buteur 2";
+                option12.value = "buteur";
+
+                select.append(option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11, option12);
+
+                divpere.append(divChild1, divChild2)
+                divParent.append(divpere, select);
                 divContainer.append(divParent);
         });
 
@@ -209,8 +273,17 @@ form.addEventListener("submit", function (event) {
         } else if (!numbrValid.test(numberInput.value.trim())) {
                 errorNumber.textContent = "Le numéro doit être compris entre 1 et 99.";
                 isValid = false;
-        } else {
+        }
+        else {
                 number = numberInput.value.trim();
+                const numeroExiste = joueurs.some((joueur, index) => {
+                        return joueur.nombre == number && index !== indexModification;
+                });
+
+                if (numeroExiste) {
+                        errorNumber.textContent = "Ce numéro est déjà attribué à un autre joueur.";
+                        isValid = false;
+                }
         }
 
         if (!isValid) {
@@ -223,8 +296,20 @@ form.addEventListener("submit", function (event) {
                 nombre: number
         };
 
+        // if (indexModification !== null) {
+        //         joueurs[indexModification] = joueur;
+        //         indexModification = null;
+        // } else {
+        //         joueurs.push(joueur);
+        // }
+
         if (indexModification !== null) {
-                joueurs[indexModification] = joueur;
+                const index = indexModification;
+
+                joueurs[index] = joueur;
+
+                modifierJoueurSurTerrain(index, joueur);
+
                 indexModification = null;
         } else {
                 joueurs.push(joueur);
@@ -260,10 +345,9 @@ function deletJoueur(btn) {
         nbrJoueur.textContent = `${joueurs.length} joueur(s)`;
 
         afficherJoueurs();
-
 }
 
-
+// modification
 document.addEventListener("click", function (event) {
         const button = event.target.closest(".edit");
 
@@ -288,9 +372,183 @@ function modifierJoueur(btn) {
         numberInput.value = joueur.nombre;
 
         radios.forEach(radio => {
-                if(radio.value === joueur.post) 
+                if (radio.value === joueur.post)
                         radio.checked = true;
         });
 
         modal.classList.remove("hidden");
+}
+
+// selection d'un post pour mettre dans un zone de terain
+
+document.addEventListener("change", (event) => {
+        // Vérifie si l'élément qui a déclenché le changement possède la classe "select"
+        const select = event.target.closest(".select");
+
+        if (select) {
+                const option = select.value;
+                const optionText = select.options[select.selectedIndex].text;
+
+                const parent = select.closest(".parent");
+                if (!parent) return;
+
+                const indice = parent.dataset.index;
+                const joueur = joueurs[indice];
+
+
+
+                if (option === "gardien") {
+                        if (joueur.post.toLowerCase() !== "gardien") {
+                                return;
+                        }
+
+                        retirerJoueurDuTerrain(joueur);
+                        const divselected = creerDivJoueur(joueur, "GB");
+
+                        joueurGB.replaceChildren(divselected);
+                }
+
+                else if (option === "defenseur") {
+
+                        if (joueur.post.toLowerCase() !== "defenseur") {
+                                return;
+                        }
+
+                        if (optionText.includes("DG - Défenseur gauche")) {
+
+                                retirerJoueurDuTerrain(joueur);
+                                const divselected = creerDivJoueur(joueur, "DG");
+                                joueurDG.replaceChildren(divselected);
+                        }
+                        else if (optionText.includes("DD - Défenseur droit")) {
+
+                                retirerJoueurDuTerrain(joueur);
+                                const divselected = creerDivJoueur(joueur, "DD");
+                                joueurDD.replaceChildren(divselected);
+                        }
+                        else if (optionText.includes("DC - Défenseur central 1")) {
+
+                                retirerJoueurDuTerrain(joueur);
+                                const divselected = creerDivJoueur(joueur, "DC");
+                                joueurDC1.replaceChildren(divselected);
+                        }
+                        else if (optionText.includes("DC - Défenseur central 2")) {
+                                retirerJoueurDuTerrain(joueur);
+                                const divselected = creerDivJoueur(joueur, "DC");
+                                joueurDC2.replaceChildren(divselected);
+                        }
+                }
+                else if (option === "milieu") {
+                        if (joueur.post.toLowerCase() !== "milieu") {
+                                return;
+                        }
+                        if (optionText.includes("MG - Milieu gauche")) {
+
+                                retirerJoueurDuTerrain(joueur);
+                                const divselected = creerDivJoueur(joueur, "MG");
+                                joueurMG.replaceChildren(divselected);
+                        }
+                        else if (optionText.includes("MD - Milieu droit")) {
+
+                                retirerJoueurDuTerrain(joueur);
+                                const divselected = creerDivJoueur(joueur, "MD");
+                                joueurMD.replaceChildren(divselected);
+                        }
+                        else if (optionText.includes("MC - Milieu central 1")) {
+
+                                retirerJoueurDuTerrain(joueur);
+                                const divselected = creerDivJoueur(joueur, "MC");
+                                joueurMC1.replaceChildren(divselected);
+                        }
+                        else if (optionText.includes("MC - Milieu central 2")) {
+                                retirerJoueurDuTerrain(joueur);
+                                const divselected = creerDivJoueur(joueur, "MC");
+                                joueurMC2.replaceChildren(divselected);
+                        }
+
+                }
+                else if (option === "buteur") {
+                        if (joueur.post.toLowerCase() !== "attaquant") {
+                                return;
+                        }
+                        if (optionText.includes("BU - Buteur 1")) {
+
+                                retirerJoueurDuTerrain(joueur);
+                                const divselected = creerDivJoueur(joueur, "BU");
+                                joueurBU1.replaceChildren(divselected);
+                        }
+                        else if (optionText.includes("BU - Buteur 2")) {
+
+                                retirerJoueurDuTerrain(joueur);
+                                const divselected = creerDivJoueur(joueur, "BU");
+                                joueurBU2.replaceChildren(divselected);
+                        }
+                }
+                else if (option === "sur-bank") {
+                        retirerJoueurDuTerrain(joueur);
+                }
+        }
+});
+
+
+
+
+
+function creerDivJoueur(joueur, posteCode) {
+        const divselected = document.createElement("div");
+        divselected.dataset.numero = joueur.nombre;
+        divselected.dataset.indexJoueur = joueurs.indexOf(joueur);
+
+        const divselectedChild1 = document.createElement("div");
+        divselectedChild1.textContent = joueur.nombre;
+
+        const divselectedChild2 = document.createElement("div");
+        const para1 = document.createElement("p");
+        para1.textContent = posteCode;
+        const para2 = document.createElement("p");
+        para2.textContent = joueur.name;
+
+        divselectedChild2.append(para1, para2);
+        divselected.append(divselectedChild1, divselectedChild2);
+
+        return divselected;
+}
+
+function retirerJoueurDuTerrain(joueur) {
+        const joueurSurTerrain = document.querySelector(
+                `[data-numero="${joueur.nombre}"]`
+        );
+
+        if (joueurSurTerrain) {
+                joueurSurTerrain.remove();
+        }
+}
+
+function modifierJoueurSurTerrain(index, joueur) {
+        const joueurSurTerrain = document.querySelector(
+                `[data-index-joueur="${index}"]`
+        );
+
+        if (!joueurSurTerrain) return;
+
+        // Vérifier si le nouveau poste correspond à l'ancienne position
+        const posteCode = joueurSurTerrain.querySelector("p").textContent;
+
+        const postesCompatibles = {
+                GB: "gardien",
+                DG: "defenseur",
+                DC: "defenseur",
+                DD: "defenseur",
+                MG: "milieu",
+                MC: "milieu",
+                MD: "milieu",
+                BU: "buteur"
+        };
+
+        if (postesCompatibles[posteCode] !== joueur.post.toLowerCase()) {
+                joueurSurTerrain.remove();
+                return;
+        }
+
+        joueurSurTerrain.replaceWith(creerDivJoueur(joueur, posteCode));
 }
