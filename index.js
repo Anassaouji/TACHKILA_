@@ -1,4 +1,10 @@
-
+// notification message
+const notification = document.createElement("p");
+notification.classList.add("z-50",
+        "fixed", "text-white", "w-[20%]", "h-[60px]",
+        "top-[88px]", "right-[120px]",
+        "text-center", "rounded-[10px]", "!pt-[15px]"
+);
 
 const terrain = document.querySelector("#terrain");
 const aside = document.querySelector("aside");
@@ -8,6 +14,9 @@ for (let i = 1; i <= 93; i++) {
         col.classList.add("col" + i);
         terrain.appendChild(col);
 }
+
+
+
 
 const joueurDG = document.querySelector(".col16");
 const dg = document.createElement("p");
@@ -216,6 +225,7 @@ function afficherJoueurs() {
                 option12.value = "buteur";
 
                 select.append(option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11, option12);
+                select.value = ele.positionTerrain || "sur-bank";
 
                 divpere.append(divChild1, divChild2)
                 divParent.append(divpere, select);
@@ -225,7 +235,8 @@ function afficherJoueurs() {
         // Afficher la liste complète
         divAremplace.replaceChildren(divContainer);
 }
-
+const section = document.querySelector(".section");
+let timerNotification;
 // Ajouter un joueur
 form.addEventListener("submit", function (event) {
         event.preventDefault();
@@ -236,6 +247,7 @@ form.addEventListener("submit", function (event) {
 
         const errorName = document.querySelector(".error-name");
         const errorNumber = document.querySelector(".error-number");
+
 
 
 
@@ -253,7 +265,7 @@ form.addEventListener("submit", function (event) {
                 post = postChecked.value;
         }
 
-        const validName = /^[a-zA-Z]{3,7}$/;
+        const validName = /^[a-zA-Z]{3,8}$/;
         const numbrValid = /^(?:[1-9][0-9]?)$/;
 
         if (inputName.value.trim() === "") {
@@ -293,7 +305,10 @@ form.addEventListener("submit", function (event) {
         const joueur = {
                 name: name,
                 post: post,
-                nombre: number
+                nombre: number,
+                positionTerrain: indexModification !== null
+                        ? (joueurs[indexModification].positionTerrain || "sur-bank")
+                        : "sur-bank"
         };
 
         // if (indexModification !== null) {
@@ -309,10 +324,13 @@ form.addEventListener("submit", function (event) {
                 joueurs[index] = joueur;
 
                 modifierJoueurSurTerrain(index, joueur);
+                notificationMsg("Joueur Modifierer avec Succes", "bg-green-600", "bg-red-800");
+
 
                 indexModification = null;
         } else {
                 joueurs.push(joueur);
+                notificationMsg("Joueur ajouté avec succès", "bg-green-600", "bg-red-800");
         }
 
         const nbrJoueurs = document.querySelector(".nombreJoueur");
@@ -331,7 +349,19 @@ document.addEventListener("click", function (event) {
         const button = event.target.closest(".delete");
 
         if (button) {
+
+                const parent = button.closest(".parent");
+                if (!parent) return;
+
+                const index = Number(parent.dataset.index);
+                const joueur = joueurs[index];
+
+                // Retirer le joueur du terrain avant de le supprimer du tableau
+                retirerJoueurDuTerrain(joueur);
+
                 deletJoueur(button);
+
+                notificationMsg("Joueur Supreme avec Succes", "bg-red-800", "bg-green-600");
         }
 });
 
@@ -399,18 +429,21 @@ document.addEventListener("change", (event) => {
 
                 if (option === "gardien") {
                         if (joueur.post.toLowerCase() !== "gardien") {
+                                select.value = joueur.positionTerrain || "sur-bank";
                                 return;
                         }
 
                         retirerJoueurDuTerrain(joueur);
                         const divselected = creerDivJoueur(joueur, "GB");
-
                         joueurGB.replaceChildren(divselected);
+                        joueur.positionTerrain = "gardien";
+                        notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                 }
 
                 else if (option === "defenseur") {
 
                         if (joueur.post.toLowerCase() !== "defenseur") {
+                                select.value = joueur.positionTerrain || "sur-bank";
                                 return;
                         }
 
@@ -419,27 +452,36 @@ document.addEventListener("change", (event) => {
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "DG");
                                 joueurDG.replaceChildren(divselected);
+                                joueur.positionTerrain = "DG - Défenseur gauche";
+                                notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                         }
                         else if (optionText.includes("DD - Défenseur droit")) {
 
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "DD");
                                 joueurDD.replaceChildren(divselected);
+                                joueur.positionTerrain = "DD - Défenseur droit";
+                                notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                         }
                         else if (optionText.includes("DC - Défenseur central 1")) {
 
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "DC");
                                 joueurDC1.replaceChildren(divselected);
+                                joueur.positionTerrain = "DC - Défenseur central 1";
+                                notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                         }
                         else if (optionText.includes("DC - Défenseur central 2")) {
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "DC");
                                 joueurDC2.replaceChildren(divselected);
+                                joueur.positionTerrain = "DC - Défenseur central 2";
+                                notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                         }
                 }
                 else if (option === "milieu") {
                         if (joueur.post.toLowerCase() !== "milieu") {
+                                select.value = joueur.positionTerrain || "sur-bank";
                                 return;
                         }
                         if (optionText.includes("MG - Milieu gauche")) {
@@ -447,28 +489,37 @@ document.addEventListener("change", (event) => {
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "MG");
                                 joueurMG.replaceChildren(divselected);
+                                joueur.positionTerrain = "MG - Milieu gauche";
+                                notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                         }
                         else if (optionText.includes("MD - Milieu droit")) {
 
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "MD");
                                 joueurMD.replaceChildren(divselected);
+                                joueur.positionTerrain = "MD - Milieu droit";
+                                notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                         }
                         else if (optionText.includes("MC - Milieu central 1")) {
 
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "MC");
                                 joueurMC1.replaceChildren(divselected);
+                                joueur.positionTerrain = "MC - Milieu central 1";
+                                notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                         }
                         else if (optionText.includes("MC - Milieu central 2")) {
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "MC");
                                 joueurMC2.replaceChildren(divselected);
+                                joueur.positionTerrain = "MC - Milieu central 2";
+                                notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                         }
 
                 }
                 else if (option === "buteur") {
                         if (joueur.post.toLowerCase() !== "attaquant") {
+                                select.value = joueur.positionTerrain || "sur-bank";
                                 return;
                         }
                         if (optionText.includes("BU - Buteur 1")) {
@@ -476,32 +527,53 @@ document.addEventListener("change", (event) => {
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "BU");
                                 joueurBU1.replaceChildren(divselected);
+                                joueur.positionTerrain = "BU - Buteur 1";
+                                notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                         }
                         else if (optionText.includes("BU - Buteur 2")) {
 
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "BU");
                                 joueurBU2.replaceChildren(divselected);
+                                joueur.positionTerrain = "BU - Buteur 2";
+                                notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                         }
                 }
                 else if (option === "sur-bank") {
                         retirerJoueurDuTerrain(joueur);
+                        joueur.positionTerrain = "sur-bank";
+                        notificationMsg("Joueur retiré du terrain avec succès", "bg-green-600", "bg-red-800");
                 }
         }
 });
 
 
+function notificationMsg(msg, bgColorAdd, bgColorRemove) {
 
+        modifierCounter();
+
+        notification.textContent = msg;
+        notification.classList.remove(bgColorRemove);
+        notification.classList.add(bgColorAdd);
+        section.append(notification);
+
+
+        clearTimeout(timerNotification);
+
+        timerNotification = setTimeout(() => {
+                notification.remove();
+        }, 3000);
+}
 
 
 function creerDivJoueur(joueur, posteCode) {
         const divselected = document.createElement("div");
-        divselected.classList.add("flex","items-center","text-white");
+        divselected.classList.add("flex", "items-center", "text-white");
         divselected.dataset.numero = joueur.nombre;
         divselected.dataset.indexJoueur = joueurs.indexOf(joueur);
 
         const divselectedChild1 = document.createElement("div");
-        divselectedChild1.classList.add("border-2","rounded-[50%]","!px-2","py-4","!mr-1")
+        divselectedChild1.classList.add("border-2", "rounded-[50%]", "!px-2", "py-4", "!mr-1")
         divselectedChild1.textContent = joueur.nombre;
 
         const divselectedChild2 = document.createElement("div");
@@ -553,4 +625,14 @@ function modifierJoueurSurTerrain(index, joueur) {
         }
 
         joueurSurTerrain.replaceWith(creerDivJoueur(joueur, posteCode));
+}
+
+
+function modifierCounter() {
+        const compteur = document.querySelector(".counter-joueurs");
+
+        const nombreJourSurTirain = terrain.querySelectorAll("[data-numero]").length;
+
+        compteur.textContent = `${nombreJourSurTirain} / 11`;
+
 }
