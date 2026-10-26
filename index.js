@@ -1,9 +1,31 @@
 // notification message
 const notification = document.createElement("p");
-notification.classList.add("z-50",
-        "fixed", "text-white", "w-[20%]", "h-[60px]",
-        "top-[88px]", "right-[120px]",
-        "text-center", "rounded-[10px]", "!pt-[15px]"
+
+notification.classList.add(
+        "z-50",
+        "fixed",
+        "text-white",
+        "text-center",
+        "rounded-[10px]",
+
+        "w-[90%]",
+        "right-[5%]",
+        "top-[90px]",
+        "h-[60px]",
+        "!pt-[10px]",
+
+        "md:w-[60%]",
+        "md:right-[155px]",
+        "md:top-[90px]",
+        "!pt-[16px]",
+
+        "lg:w-[40%]",
+        "lg:right-[40px]",
+        "lg:top-[88px]",
+        "lg:!pt-[16px]",
+
+        "xl:w-[30%]",
+        "xl:right-[43px]"
 );
 
 const terrain = document.querySelector("#terrain");
@@ -79,6 +101,15 @@ const btnHidden = document.querySelector(".btn-hidden");
 const btnAnulle = document.querySelector(".btn-annule");
 
 btnAjout.addEventListener("click", () => {
+        renitialisationMessageDerror();
+        const inputName = document.querySelector("input[type='text']");
+        const numberInput = document.querySelector('input[type="number"]');
+        inputName.value = "";
+        numberInput.value = "";
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+        });
+
         modal.classList.remove("hidden");
 })
 btnHidden.addEventListener("click", () => {
@@ -91,8 +122,11 @@ btnAnulle.addEventListener("click", () => {
 
 
 
+// const fotballer = localStorage.getItem("joueurs");
+// joueurs = fotballer ? JSON.parse(localStorage.getItem("joueurs")) : [];
 
-const joueurs = [];
+
+let joueurs = JSON.parse(localStorage.getItem("joueurs")) || [];
 let indexModification = null;
 
 const form = document.querySelector("#monForm");
@@ -174,55 +208,43 @@ function afficherJoueurs() {
                 const select = document.createElement("select");
                 select.classList.add("select", "w-full", "!mt-2", "bg-slate-800", "border", "rounded-[6px]", "!p-2");
                 select.name = "post-name";
-                // option
+                // options
                 const option1 = document.createElement("option");
-                option1.textContent = "Sur le banc";
-                option1.classList.add("option");
-                option1.value = "sur-bank";
+                createOption(option1, "Sur le banc", "sur-bank");
+                
                 const option2 = document.createElement("option");
-                option2.classList.add("option");
-                option2.textContent = "GB - Gardien";
-                option2.value = "gardien";
+                createOption(option2, "GB - Gardien", "gardien");
+                
                 const option3 = document.createElement("option");
-                option3.classList.add("option");
-                option3.textContent = "DG - Défenseur gauche";
-                option3.value = "defenseur";
+                createOption(option3, "DG - Défenseur gauche", "defenseur");
+                
                 const option4 = document.createElement("option");
-                option4.classList.add("option");
-                option4.textContent = "DC - Défenseur central 1";
-                option4.value = "defenseur";
+                createOption(option4, "DC - Défenseur central 1", "defenseur");
+                
                 const option5 = document.createElement("option");
-                option5.classList.add("option");
-                option5.textContent = "DC - Défenseur central 2";
-                option5.value = "defenseur";
+                createOption(option5, "DC - Défenseur central 2", "defenseur");
+                
                 const option6 = document.createElement("option");
-                option6.classList.add("option");
-                option6.textContent = "DD - Défenseur droit";
-                option6.value = "defenseur";
+                createOption(option6, "DD - Défenseur droit", "defenseur");
+                
                 const option7 = document.createElement("option");
-                option7.classList.add("option");
-                option7.textContent = "MG - Milieu gauche";
-                option7.value = "milieu";
+                createOption(option7, "MG - Milieu gauche", "milieu");
+                
                 const option8 = document.createElement("option");
-                option8.classList.add("option");
-                option8.textContent = "MC - Milieu central 1";
-                option8.value = "milieu";
+                createOption(option8, "MC - Milieu central 1", "milieu");
+                
                 const option9 = document.createElement("option");
-                option9.classList.add("option");
-                option9.textContent = "MC - Milieu central 2";
-                option9.value = "milieu";
+                createOption(option9, "MC - Milieu central 2", "milieu");
+                
                 const option10 = document.createElement("option");
-                option10.classList.add("option");
-                option10.textContent = "MD - Milieu droit";
-                option10.value = "milieu";
+                createOption(option10, "MD - Milieu droit", "milieu");
+                
                 const option11 = document.createElement("option");
-                option11.classList.add("option");
-                option11.textContent = "BU - Buteur 1";
-                option11.value = "buteur";
+                createOption(option11, "BU - Buteur 1", "buteur");
+                
                 const option12 = document.createElement("option");
-                option12.classList.add("option");
-                option12.textContent = "BU - Buteur 2";
-                option12.value = "buteur";
+                createOption(option12, "BU - Buteur 2", "buteur");
+                
 
                 select.append(option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11, option12);
                 select.value = ele.positionTerrain || "sur-bank";
@@ -235,6 +257,19 @@ function afficherJoueurs() {
         // Afficher la liste complète
         divAremplace.replaceChildren(divContainer);
 }
+
+function createOption(option, valuetextContent, value) {
+        option.textContent = valuetextContent;
+        option.classList.add("option");
+        option.value = value;
+}
+
+afficherJoueurs();
+
+document.querySelector(".nombreJoueur").textContent =
+        `${joueurs.length} joueur(s)`;
+
+
 const section = document.querySelector(".section");
 let timerNotification;
 // Ajouter un joueur
@@ -245,15 +280,12 @@ form.addEventListener("submit", function (event) {
         const postChecked = document.querySelector("input[type='radio']:checked");
         const numberInput = document.querySelector('input[type="number"]');
 
+
+
         const errorName = document.querySelector(".error-name");
         const errorNumber = document.querySelector(".error-number");
+        const errorPost = document.querySelector(".error-post");
 
-
-
-
-        // Réinitialiser les messages d'erreur au début de la soumission
-        errorName.textContent = "";
-        errorNumber.textContent = "";
 
         let name = "";
         let post = "";
@@ -261,7 +293,11 @@ form.addEventListener("submit", function (event) {
 
         let isValid = true;
 
-        if (postChecked) {
+        if (!postChecked) {
+                errorPost.textContent = "doit choisie un post de Joueur !";
+                isValid = false;
+        }
+        else {
                 post = postChecked.value;
         }
 
@@ -311,13 +347,6 @@ form.addEventListener("submit", function (event) {
                         : "sur-bank"
         };
 
-        // if (indexModification !== null) {
-        //         joueurs[indexModification] = joueur;
-        //         indexModification = null;
-        // } else {
-        //         joueurs.push(joueur);
-        // }
-
         if (indexModification !== null) {
                 const index = indexModification;
 
@@ -332,6 +361,8 @@ form.addEventListener("submit", function (event) {
                 joueurs.push(joueur);
                 notificationMsg("Joueur ajouté avec succès", "bg-green-600", "bg-red-800");
         }
+        // localstorage
+        sauvegarderJoueurs();
 
         const nbrJoueurs = document.querySelector(".nombreJoueur");
         nbrJoueurs.textContent = `${joueurs.length} joueur(s)`;
@@ -342,7 +373,10 @@ form.addEventListener("submit", function (event) {
         form.reset();
 });
 
-
+// localstorage
+function sauvegarderJoueurs() {
+        localStorage.setItem("joueurs", JSON.stringify(joueurs));
+}
 
 // supprimer un joueur
 document.addEventListener("click", function (event) {
@@ -365,25 +399,30 @@ document.addEventListener("click", function (event) {
         }
 });
 
-
 function deletJoueur(btn) {
         const parent = btn.closest(".parent");
         const index = Number(parent.dataset.index);
 
         joueurs.splice(index, 1);
+        // localstorage
+        sauvegarderJoueurs();
+
         const nbrJoueur = document.querySelector(".nombreJoueur");
         nbrJoueur.textContent = `${joueurs.length} joueur(s)`;
-
         afficherJoueurs();
 }
 
 // modification
 document.addEventListener("click", function (event) {
+
+
         const button = event.target.closest(".edit");
 
         if (button) {
                 modifierJoueur(button);
         }
+        renitialisationMessageDerror();
+
 });
 
 function modifierJoueur(btn) {
@@ -545,6 +584,7 @@ document.addEventListener("change", (event) => {
                         notificationMsg("Joueur retiré du terrain avec succès", "bg-green-600", "bg-red-800");
                 }
         }
+        sauvegarderJoueurs();
 });
 
 
@@ -634,5 +674,18 @@ function modifierCounter() {
         const nombreJourSurTirain = terrain.querySelectorAll("[data-numero]").length;
 
         compteur.textContent = `${nombreJourSurTirain} / 11`;
+
+}
+
+
+function renitialisationMessageDerror() {
+        const errorName = document.querySelector(".error-name");
+        const errorNumber = document.querySelector(".error-number");
+        const errorPost = document.querySelector(".error-post");
+
+        // Réinitialiser les messages d'erreur au début de la soumission
+        errorName.textContent = "";
+        errorNumber.textContent = "";
+        errorPost.textContent = "";
 
 }

@@ -37,10 +37,12 @@
             <div class="!m-4 text-white">
                 <button class="btn-ajout bg-green-500 !p-3  text-white rounded-[10px] w-full">Ajouter un joueur</button>
                 <div
-                    class="modal-ajout hidden bg-blue-900 rounded-[10px] z-20 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[23%]">
+                    class="modal-ajout hidden bg-blue-900 rounded-[10px] z-20 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 xl:w-[23%] 
+                    lg:w-[30%] md:w-1/2 
+                    ">
                     <div class="!p-4">
                         <div class="flex justify-between !mb-5">
-                            <p>Modifier le joueur</p>
+                            <p>Ajouter un joueur</p>
                             <button class="btn-hidden">⨉</button>
                         </div>
                         <form id="monForm">
@@ -76,6 +78,7 @@
 
                                     </div>
                                 </div>
+                                <span class="text-red-500 text-sm error-post"></span>
                             </div>
                             <div class="flex flex-col !my-6">
                                 <label for="num">Numéro (1 à 99)</label>
@@ -99,12 +102,12 @@
                     <span>
                         Cliquez sur un joueur placé pour voir sa case sur le terrain.
                     </span>
-                        <span>
-                            <img class="inline" src="./images/edit-2.svg" alt="modifier"><span>pour modifier.</span>
-                        </span>
-                        <span>
-                            <img class="inline" src="./images/trash-2.svg" alt="suppreme"><span>pour supprimer.</span>
-                        </span>
+                    <span>
+                        <img class="inline" src="./images/edit-2.svg" alt="modifier"><span>pour modifier.</span>
+                    </span>
+                    <span>
+                        <img class="inline" src="./images/trash-2.svg" alt="suppreme"><span>pour supprimer.</span>
+                    </span>
                 </div>
                 <div class="remplace w-full rounded-[10px] border-2 border-dashed !mt-4 !p-5 text-center">
                     <p>
@@ -120,6 +123,38 @@
                 placés: <span class="counter-joueurs">0 / 11</span>
             </p>
         </section>
+        <!-- Modal de confirmation de suppression -->
+        <div id="modalDelete" class="fixed z-50 left-[30%] top-[20%] hidden items-center justify-center">
+
+            <div class="w-full max-w-md rounded-xl bg-white !p-6 !mx-4">
+
+                <!-- Titre -->
+                <h2 class="text-xl font-bold text-gray-800 !mb-3">
+                    Confirmer la suppression
+                </h2>
+
+                <!-- Message -->
+                <p class="text-gray-600 !mb-6">
+                    Êtes-vous sûr de vouloir supprimer ce joueur ?
+                    Cette action est irréversible.
+                </p>
+
+                <!-- Boutons -->
+                <div class="flex justify-end gap-3">
+
+                    <button id="cancelDelete" type="button" class="rounded-lg border border-gray-300 !px-4 !py-2
+                           text-gray-700 hover:bg-gray-100">
+                        Annuler
+                    </button>
+
+                    <button id="confirmDelete" type="button" class="rounded-lg bg-red-600 !px-4 !py-2
+                           text-white hover:bg-red-700">
+                        Confirmer
+                    </button>
+
+                </div>
+            </div>
+        </div>
     </main>
 </body>
 
