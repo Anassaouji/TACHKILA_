@@ -211,40 +211,40 @@ function afficherJoueurs() {
                 // options
                 const option1 = document.createElement("option");
                 createOption(option1, "Sur le banc", "sur-bank");
-                
+
                 const option2 = document.createElement("option");
                 createOption(option2, "GB - Gardien", "gardien");
-                
+
                 const option3 = document.createElement("option");
                 createOption(option3, "DG - Défenseur gauche", "defenseur");
-                
+
                 const option4 = document.createElement("option");
                 createOption(option4, "DC - Défenseur central 1", "defenseur");
-                
+
                 const option5 = document.createElement("option");
                 createOption(option5, "DC - Défenseur central 2", "defenseur");
-                
+
                 const option6 = document.createElement("option");
                 createOption(option6, "DD - Défenseur droit", "defenseur");
-                
+
                 const option7 = document.createElement("option");
                 createOption(option7, "MG - Milieu gauche", "milieu");
-                
+
                 const option8 = document.createElement("option");
                 createOption(option8, "MC - Milieu central 1", "milieu");
-                
+
                 const option9 = document.createElement("option");
                 createOption(option9, "MC - Milieu central 2", "milieu");
-                
+
                 const option10 = document.createElement("option");
                 createOption(option10, "MD - Milieu droit", "milieu");
-                
+
                 const option11 = document.createElement("option");
                 createOption(option11, "BU - Buteur 1", "buteur");
-                
+
                 const option12 = document.createElement("option");
                 createOption(option12, "BU - Buteur 2", "buteur");
-                
+
 
                 select.append(option1, option2, option3, option4, option5, option6, option7, option8, option9, option10, option11, option12);
                 select.value = ele.positionTerrain || "sur-bank";
@@ -469,8 +469,12 @@ document.addEventListener("change", (event) => {
                 if (option === "gardien") {
                         if (joueur.post.toLowerCase() !== "gardien") {
                                 select.value = joueur.positionTerrain || "sur-bank";
+                                notificationMsg("Joueur a pas ce post", "bg-red-800", "bg-red-800");
                                 return;
                         }
+
+                        if(!verifiPositionTerain(joueurGB, joueur, select)) return;
+                        
 
                         retirerJoueurDuTerrain(joueur);
                         const divselected = creerDivJoueur(joueur, "GB");
@@ -483,11 +487,13 @@ document.addEventListener("change", (event) => {
 
                         if (joueur.post.toLowerCase() !== "defenseur") {
                                 select.value = joueur.positionTerrain || "sur-bank";
+                                notificationMsg("Joueur a pas ce post", "bg-red-800", "bg-red-800");
                                 return;
                         }
 
                         if (optionText.includes("DG - Défenseur gauche")) {
 
+                                if(!verifiPositionTerain(joueurDG, joueur, select)) return;
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "DG");
                                 joueurDG.replaceChildren(divselected);
@@ -496,6 +502,7 @@ document.addEventListener("change", (event) => {
                         }
                         else if (optionText.includes("DD - Défenseur droit")) {
 
+                                if(!verifiPositionTerain(joueurDD, joueur, select)) return;
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "DD");
                                 joueurDD.replaceChildren(divselected);
@@ -504,6 +511,7 @@ document.addEventListener("change", (event) => {
                         }
                         else if (optionText.includes("DC - Défenseur central 1")) {
 
+                                if(!verifiPositionTerain(joueurDC1, joueur, select)) return;
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "DC");
                                 joueurDC1.replaceChildren(divselected);
@@ -511,6 +519,7 @@ document.addEventListener("change", (event) => {
                                 notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                         }
                         else if (optionText.includes("DC - Défenseur central 2")) {
+                                if(!verifiPositionTerain(joueurDC2, joueur, select)) return;
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "DC");
                                 joueurDC2.replaceChildren(divselected);
@@ -521,10 +530,12 @@ document.addEventListener("change", (event) => {
                 else if (option === "milieu") {
                         if (joueur.post.toLowerCase() !== "milieu") {
                                 select.value = joueur.positionTerrain || "sur-bank";
+                                notificationMsg("Joueur a pas ce post", "bg-red-800", "bg-red-800");
                                 return;
                         }
                         if (optionText.includes("MG - Milieu gauche")) {
 
+                                if(!verifiPositionTerain(joueurMG, joueur, select)) return;
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "MG");
                                 joueurMG.replaceChildren(divselected);
@@ -533,6 +544,7 @@ document.addEventListener("change", (event) => {
                         }
                         else if (optionText.includes("MD - Milieu droit")) {
 
+                                if(!verifiPositionTerain(joueurMD, joueur, select)) return;
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "MD");
                                 joueurMD.replaceChildren(divselected);
@@ -541,6 +553,7 @@ document.addEventListener("change", (event) => {
                         }
                         else if (optionText.includes("MC - Milieu central 1")) {
 
+                                if(!verifiPositionTerain(joueurMC1, joueur, select)) return;
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "MC");
                                 joueurMC1.replaceChildren(divselected);
@@ -548,6 +561,8 @@ document.addEventListener("change", (event) => {
                                 notificationMsg("Joueur placé sur le terrain avec succès", "bg-green-600", "bg-red-800");
                         }
                         else if (optionText.includes("MC - Milieu central 2")) {
+
+                                if(!verifiPositionTerain(joueurMC2, joueur, select)) return;
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "MC");
                                 joueurMC2.replaceChildren(divselected);
@@ -559,10 +574,12 @@ document.addEventListener("change", (event) => {
                 else if (option === "buteur") {
                         if (joueur.post.toLowerCase() !== "attaquant") {
                                 select.value = joueur.positionTerrain || "sur-bank";
+                                notificationMsg("Joueur a pas ce post", "bg-red-800", "bg-red-800");
                                 return;
                         }
                         if (optionText.includes("BU - Buteur 1")) {
 
+                                if(!verifiPositionTerain(joueurBU1, joueur, select)) return;
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "BU");
                                 joueurBU1.replaceChildren(divselected);
@@ -571,6 +588,7 @@ document.addEventListener("change", (event) => {
                         }
                         else if (optionText.includes("BU - Buteur 2")) {
 
+                                if(!verifiPositionTerain(joueurBU2, joueur, select)) return;
                                 retirerJoueurDuTerrain(joueur);
                                 const divselected = creerDivJoueur(joueur, "BU");
                                 joueurBU2.replaceChildren(divselected);
@@ -583,10 +601,35 @@ document.addEventListener("change", (event) => {
                         joueur.positionTerrain = "sur-bank";
                         notificationMsg("Joueur retiré du terrain avec succès", "bg-green-600", "bg-red-800");
                 }
+                sauvegarderJoueurs();
         }
-        sauvegarderJoueurs();
 });
 
+function verifiPositionTerain(joueurG, jou, selec) {
+
+        const joueurPresent = joueurG.querySelector("[data-numero]");
+
+        if (joueurPresent && joueurPresent.dataset.numero != jou.nombre) {
+
+                const ancienneOption = [...selec.options].find(
+                        opt => opt.text.includes(jou.positionTerrain || "sur-bank")
+                );
+
+                if (ancienneOption) {
+                        selec.selectedIndex = ancienneOption.index;
+                }
+
+                notificationMsg(
+                        "Cette position est déjà occupée !",
+                        "bg-red-800",
+                        "bg-red-800"
+                );
+                selec.value="sur-bank";
+
+                return false;
+        }
+        return true;
+}
 
 function notificationMsg(msg, bgColorAdd, bgColorRemove) {
 
@@ -636,6 +679,7 @@ function retirerJoueurDuTerrain(joueur) {
         if (joueurSurTerrain) {
                 joueurSurTerrain.remove();
         }
+
 }
 
 function modifierJoueurSurTerrain(index, joueur) {
