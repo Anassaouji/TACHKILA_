@@ -9,7 +9,7 @@ L'application permet d'ajouter, de modifier et de supprimer des joueurs, de les 
 ## 🌐 Démonstration
 
 - **Site web :** [tachkila-pi.vercel.app](https://tachkila-pi.vercel.app)
-- **Dépôt GitHub :** [Consulter le code source](YOUR_GITHUB_REPOSITORY_URL)
+- **Dépôt GitHub :** [Consulter le code source](https://github.com/Anassaouji/TACHKILA_.git)
 - **Planification des tâches (Jira) :** [Tableau Jira - Atlas FC](https://aoujianass.atlassian.net/jira/software/projects/TE/boards/2)
 - **Présentation Canva :** [Lien de Présentation Canva](https://canva.link/howhr5bvpqzw529)
 
