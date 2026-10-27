@@ -7,7 +7,7 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <script src="./index.js" defer></script>
+    <script src="./index.js" type="module" ></script>
     <!-- <style type="text/tailwindcss">
         @import "tailwindcss";
     </style> -->
@@ -126,15 +126,15 @@
         <!-- Modal de confirmation de suppression -->
         <div id="modalDelete" class="fixed z-50 left-[30%] top-[20%] hidden items-center justify-center">
 
-            <div class="w-full max-w-md rounded-xl bg-white !p-6 !mx-4">
+            <div class="w-full max-w-md rounded-xl bg-sky-900 !p-6 !mx-4">
 
                 <!-- Titre -->
-                <h2 class="text-xl font-bold text-gray-800 !mb-3">
+                <h2 class="text-xl font-bold text-white !mb-3">
                     Confirmer la suppression
                 </h2>
 
                 <!-- Message -->
-                <p class="text-gray-600 !mb-6">
+                <p class="text-white !mb-6">
                     Êtes-vous sûr de vouloir supprimer ce joueur ?
                     Cette action est irréversible.
                 </p>
@@ -143,7 +143,7 @@
                 <div class="flex justify-end gap-3">
 
                     <button id="cancelDelete" type="button" class="rounded-lg border border-gray-300 !px-4 !py-2
-                           text-gray-700 hover:bg-gray-100">
+                           text-white hover:bg-gray-100">
                         Annuler
                     </button>
 
