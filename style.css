@@ -141,6 +141,10 @@
     min-width: 700px;
     margin: 75px 40px 10px 40px;
     background-color: #070d1f;
+    background-image: url(./images/terrain.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
     border: 1px solid #ffffff45;
     padding: 10px;
     border-radius: 10px;
@@ -164,8 +168,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #141e30;
-    border: 1px solid #202c40;
+    /* background: #141e30; */
+    /* border: 1px solid #202c40; */
     border-radius: 8px;
     min-width: 0;
     min-height: 45px;
